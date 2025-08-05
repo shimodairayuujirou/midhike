@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:midhike/ProfileInputPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:midhike/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,20 +17,40 @@ class _LoginPageState extends State<LoginPage> {
   String _message = '';
 
   Future<void> _login() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
+  try {
+    // Firebase Authentication でログイン
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
+
+    // Firestore にユーザー情報があるか確認
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (!doc.exists) {
+      // ユーザー情報が未登録 → プロフィール登録ページへ（履歴を消して遷移）
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const ProfileInputPage()),
+        (route) => false,
       );
-      setState(() {
-        _message = 'ログイン成功！';
-      });
+    } else {
+      // 既に登録済み → ホーム画面へ（履歴を消して遷移）
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const HomePage()),
+        (route) => false,
+      );
+      }
     } catch (e) {
       setState(() {
-        _message = 'ログイン失敗: $e';
+        _message = 'ログインエラー: $e';
       });
+      print(e);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
