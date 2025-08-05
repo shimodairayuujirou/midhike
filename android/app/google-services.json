@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "106699138192",
+    "project_id": "midhike-aa5ca",
+    "storage_bucket": "midhike-aa5ca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106699138192:android:b7caa4713946f44edfa415",
+        "android_client_info": {
+          "package_name": "com.example.midhike"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ7LOdlfbQ-06TscRhrxHj2TRMX-6RZsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
