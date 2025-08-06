@@ -13,7 +13,8 @@ main() {
 
 // プロバイダー
 final indexProvider = StateProvider((ref) {
-  return 0;
+  // 変化するデータ 0, 1, 2...
+  return 1;
 });
 
 // 画面全体
@@ -26,7 +27,11 @@ class Root extends ConsumerWidget {
     final index = ref.watch(indexProvider);
 
     // アイテムズ
-    const items = [
+    const items01 = [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.dehaze_rounded),
+        label: 'ハンバーガー',
+      ),
       BottomNavigationBarItem(
         icon: ImageIcon(AssetImage('images/person.png')),
         label: 'アイテムA',
@@ -49,25 +54,49 @@ class Root extends ConsumerWidget {
       ),
     ];
 
+    const items02 = [
+      BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage('images/cancel.png')),
+        label: 'キャンセル',
+      ),
+      BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage('images/camera.png')),
+        label: 'カメラ',
+      ),
+      BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage('images/share.png')),
+        label: 'シェア',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.wallet_giftcard_rounded),
+        label: 'クーポン',
+      ),
+      BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage('images/setting.png')),
+        label: '設定',
+      ),
+    ];
+
+
     // 下のバー
     final bar = BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      items: items, // アイテムズ
-      backgroundColor: Color(0xFF3D1A6F), // バー色
+      items: index == 0 ? items02 : items01, // アイテムたち
+      backgroundColor: Color(0xFF3D1A6F), // バーの色
       selectedItemColor: Colors.white, // 選ばれたアイテムの色
       unselectedItemColor: const Color.fromARGB(255, 158, 148, 148), // 選ばれていないアイテムの色
       showSelectedLabels: false,
       showUnselectedLabels: false,
       selectedFontSize: 0,
       iconSize: 50, // アイコンのサイズ
-      currentIndex: index, // インデックス
+      currentIndex: index,
       onTap: (index) {
-        // タップされたとき インデックスを変更する
         ref.read(indexProvider.notifier).state = index;
       },
-    );
+      );
 
     const pages = [
+      Damy(),
       PageA(),
       PageB(),
       PageC(),
@@ -76,8 +105,8 @@ class Root extends ConsumerWidget {
     ];
 
     return Scaffold(
-      body: pages[index],
-      bottomNavigationBar: bar,
+        body: index == 0? Container() :pages[index],
+        bottomNavigationBar: bar
     );
   }
 }
