@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'home_page.dart'; // ← ホーム画面への遷移に使います
+import 'package:midhike/footer.dart';
 
 class ProfileInputPage extends StatefulWidget {
   const ProfileInputPage({super.key});
@@ -39,7 +38,7 @@ class _ProfileInputPageState extends State<ProfileInputPage> {
       // 入力完了後、ホーム画面に遷移（戻れないようにする）
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
+        MaterialPageRoute(builder: (_) => Root()),
         (route) => false,
       );
     } catch (e) {
@@ -52,28 +51,67 @@ class _ProfileInputPageState extends State<ProfileInputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('プロフィール登録')),
+      backgroundColor: const Color(0xFF3D1A6F),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF3D1A6F),
+        elevation: 0,
+        centerTitle: true,
+        title: Image.asset('assets/images/logo.png', width: 90),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            const Text(
+              'プロフィール作成',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: '名前'),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: '名前',
+                labelStyle: TextStyle(color: Colors.white70),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white38),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ),
             ),
             TextField(
               controller: _nicknameController,
-              decoration: const InputDecoration(labelText: 'ニックネーム'),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'ニックネーム',
+                labelStyle: TextStyle(color: Colors.white70),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white38),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submitProfile,
-              child: const Text('登録してホームへ'),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF3D1A6F),
+                  padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 24),
+                ),
+              child: const Text('登録してホームへ',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
             ),
             const SizedBox(height: 12),
             Text(
               _message,
-              style: const TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),

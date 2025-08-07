@@ -8,11 +8,12 @@ class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ようこそ')),
+      backgroundColor: const Color(0xFF3D1A6F),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset('assets/images/logo.png', width: 200),            
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -30,7 +31,7 @@ class FirstPage extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const LoginPage()),
                 );
               },
-              child: const Text('ログイン'),
+              child: const Text('ログイン', style: TextStyle(color: Colors.white))
             ),
           ],
         ),

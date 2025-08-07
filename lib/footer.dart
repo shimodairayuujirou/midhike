@@ -1,112 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
-main() {
-  // アプリ
-  const app = MaterialApp(home: Root());
-
-  // プロバイダースコープ
-  const scope = ProviderScope(child: app);
-  runApp(scope);
-}
+import 'package:midhike/home_page.dart';
+import 'package:midhike/TrackingPage.dart';
+import 'package:midhike/profile.dart';
+import 'package:midhike/rirekipage.dart';
+import 'package:midhike/search.dart';
+import 'package:midhike/setting_page.dart';
 
 // プロバイダー
-final indexProvider = StateProvider((ref) {
-  // 変化するデータ 0, 1, 2...
-  return 1;
-});
+final indexProvider = StateProvider((ref) => 0);
 
-// 画面全体
+// 画面全体（フッター付き）
 class Root extends ConsumerWidget {
   const Root({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // インデックス
+    // 現在のインデックス
     final index = ref.watch(indexProvider);
 
-    // アイテムズ
-    const items01 = [
+    // ナビゲーションバーの項目
+    const items = [
       BottomNavigationBarItem(
-        icon: Icon(Icons.dehaze_rounded),
-        label: 'ハンバーガー',
+        icon: Icon(Icons.home, color: Colors.grey),
+        label: 'ホーム',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/person.png')),
-        label: 'アイテムA',
+        icon: ImageIcon(AssetImage('assets/images/person.png')),
+        label: 'プロフィール',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/search.png')),
-        label: 'アイテムB',
+        icon: ImageIcon(AssetImage('assets/images/search.png')),
+        label: '検索',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/sozai.png')),
-        label: 'アイテムC',
+        icon: ImageIcon(AssetImage('assets/images/sozai.png')),
+        label: '履歴',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/post.png')),
-        label: 'アイテムD',
+        icon: ImageIcon(AssetImage('assets/images/post.png')),
+        label: '投稿',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/sita.png')),
-        label: 'アイテムE',
-      ),
-    ];
-
-    const items02 = [
-      BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/cancel.png')),
-        label: 'キャンセル',
-      ),
-      BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/camera.png')),
-        label: 'カメラ',
-      ),
-      BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/share.png')),
-        label: 'シェア',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.wallet_giftcard_rounded),
-        label: 'クーポン',
-      ),
-      BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/setting.png')),
-        label: '設定',
+        icon: ImageIcon(AssetImage('assets/images/setting.png')),
+        label: '投稿',
       ),
     ];
 
-
-    // 下のバー
-    final bar = BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      items: index == 0 ? items02 : items01, // アイテムたち
-      backgroundColor: Color(0xFF3D1A6F), // バーの色
-      selectedItemColor: Colors.white, // 選ばれたアイテムの色
-      unselectedItemColor: const Color.fromARGB(255, 158, 148, 148), // 選ばれていないアイテムの色
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      selectedFontSize: 0,
-      iconSize: 50, // アイコンのサイズ
-      currentIndex: index,
-      onTap: (index) {
-        ref.read(indexProvider.notifier).state = index;
-      },
-      );
-
-    const pages = [
-      Damy(),
-      PageA(),
-      PageB(),
-      PageC(),
-      PageD(),
-      PageE(),
+    // ページリスト（index に応じて表示）
+    final pages = [
+      HomePage(),
+      ProfilePage(),
+      SearchPage(),
+      RirekiPage(),
+      TrackingPage(),
+      SettingPage(),
     ];
 
     return Scaffold(
-        body: index == 0? Container() :pages[index],
-        bottomNavigationBar: bar
+      body: pages[index],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: items,
+        backgroundColor: const Color(0xFF3D1A6F),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: const Color.fromARGB(255, 158, 148, 148),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedFontSize: 0,
+        iconSize: 50,
+        currentIndex: index,
+        onTap: (index) {
+          ref.read(indexProvider.notifier).state = index;
+        },
+      ),
     );
   }
 }
