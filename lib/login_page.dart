@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:midhike/ProfileInputPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:midhike/home_page.dart';
+import 'package:midhike/footer.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,31 +17,27 @@ class _LoginPageState extends State<LoginPage> {
   String _message = '';
 
   Future<void> _login() async {
-  try {
-    // Firebase Authentication でログイン
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
-
-    // Firestore にユーザー情報があるか確認
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-    if (!doc.exists) {
-      // ユーザー情報が未登録 → プロフィール登録ページへ（履歴を消して遷移）
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const ProfileInputPage()),
-        (route) => false,
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
       );
-    } else {
-      // 既に登録済み → ホーム画面へ（履歴を消して遷移）
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
-        (route) => false,
-      );
+
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (!doc.exists) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const ProfileInputPage()),
+          (route) => false,
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const Root()),
+          (route) => false,
+        );
       }
     } catch (e) {
       setState(() {
@@ -51,31 +47,81 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ログイン')),
+      backgroundColor: const Color(0xFF3D1A6F),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF3D1A6F),
+        elevation: 0,
+        centerTitle: true,
+        title: Image.asset('assets/images/logo.png', width: 90),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text(
+              'ログイン',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'メールアドレス'),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'メールアドレス',
+                labelStyle: TextStyle(color: Colors.white70),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white38),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ),
             ),
+            const SizedBox(height: 20),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'パスワード'),
               obscureText: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'パスワード',
+                labelStyle: TextStyle(color: Colors.white70),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white38),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF3D1A6F),
+                  padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 24),
+                ),
+                child: const Text(
+                  'ログイン',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              child: const Text('ログイン'),
+            Text(
+              _message,
+              style: const TextStyle(color: Colors.white),
             ),
-            const SizedBox(height: 20),
-            Text(_message),
           ],
         ),
       ),

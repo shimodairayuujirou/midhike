@@ -1,83 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
-main() {
-  // アプリ
-  const app = MaterialApp(home: Root());
-
-  // プロバイダースコープ
-  const scope = ProviderScope(child: app);
-  runApp(scope);
-}
+import 'package:midhike/home_page.dart';
+import 'package:midhike/TrackingPage.dart';
+import 'package:midhike/profile.dart';
+import 'package:midhike/rirekipage.dart';
+import 'package:midhike/search.dart';
+import 'package:midhike/setting_page.dart';
 
 // プロバイダー
-final indexProvider = StateProvider((ref) {
-  return 0;
-});
+final indexProvider = StateProvider((ref) => 0);
 
-// 画面全体
+// 画面全体（フッター付き）
 class Root extends ConsumerWidget {
   const Root({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // インデックス
+    // 現在のインデックス
     final index = ref.watch(indexProvider);
 
-    // アイテムズ
+    // ナビゲーションバーの項目
     const items = [
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/person.png')),
-        label: 'アイテムA',
+        icon: Icon(Icons.home, color: Colors.grey),
+        label: 'ホーム',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/search.png')),
-        label: 'アイテムB',
+        icon: ImageIcon(AssetImage('assets/images/person.png')),
+        label: 'プロフィール',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/sozai.png')),
-        label: 'アイテムC',
+        icon: ImageIcon(AssetImage('assets/images/search.png')),
+        label: '検索',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/post.png')),
-        label: 'アイテムD',
+        icon: ImageIcon(AssetImage('assets/images/sozai.png')),
+        label: '履歴',
       ),
       BottomNavigationBarItem(
-        icon: ImageIcon(AssetImage('images/sita.png')),
-        label: 'アイテムE',
+        icon: ImageIcon(AssetImage('assets/images/post.png')),
+        label: '投稿',
+      ),
+      BottomNavigationBarItem(
+        icon: ImageIcon(AssetImage('assets/images/setting.png')),
+        label: '投稿',
       ),
     ];
 
-    // 下のバー
-    final bar = BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      items: items, // アイテムズ
-      backgroundColor: Color(0xFF3D1A6F), // バー色
-      selectedItemColor: Colors.white, // 選ばれたアイテムの色
-      unselectedItemColor: const Color.fromARGB(255, 158, 148, 148), // 選ばれていないアイテムの色
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      selectedFontSize: 0,
-      iconSize: 50, // アイコンのサイズ
-      currentIndex: index, // インデックス
-      onTap: (index) {
-        // タップされたとき インデックスを変更する
-        ref.read(indexProvider.notifier).state = index;
-      },
-    );
-
-    const pages = [
-      PageA(),
-      PageB(),
-      PageC(),
-      PageD(),
-      PageE(),
+    // ページリスト（index に応じて表示）
+    final pages = [
+      HomePage(),
+      ProfilePage(),
+      SearchPage(),
+      RirekiPage(),
+      TrackingPage(),
+      SettingPage(),
     ];
 
     return Scaffold(
       body: pages[index],
-      bottomNavigationBar: bar,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: items,
+        backgroundColor: const Color(0xFF3D1A6F),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: const Color.fromARGB(255, 158, 148, 148),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedFontSize: 0,
+        iconSize: 50,
+        currentIndex: index,
+        onTap: (index) {
+          ref.read(indexProvider.notifier).state = index;
+        },
+      ),
     );
   }
 }
